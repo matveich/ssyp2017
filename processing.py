@@ -1,5 +1,5 @@
 import utils
-
+from pprint import pprint
 
 class Process:
 
@@ -48,6 +48,7 @@ class Process:
     def preprocess(self):  # реализовываем их предобработку
         # массив с компонентами связности
         cc_map = self.find_cc()
+        pixels_for_change = []
         for i in range(1, self.w - 1):
             for j in range(1, self.h - 1):
                 if self.img[i, j] == 0:
@@ -56,9 +57,12 @@ class Process:
                 # - меняем цвет на чёрный
                 if self.img[i - 1, j] != self.img[i + 1, j] or self.img[i, j - 1] != self.img[i, j + 1]:
                     self.img[i, j] = 0
-                cc_map_new = self.find_cc()
-                if max(map(max, cc_map)) > max(map(max, cc_map_new)):  # уменьшилось число компонент связности
+                    cc_map_new = self.find_cc()
                     self.img[i, j] = 255
+                    if max(map(max, cc_map)) <= max(map(max, cc_map_new)):  # не уменьшилось число компонент связности
+                        pixels_for_change.append((i, j))
+        for i, j in pixels_for_change:
+            self.img[i, j] = 0
 
     def skeletonize(self):
         utils.save_debug_img(self.get_img_as_array(), 'before.png')
