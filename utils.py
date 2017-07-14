@@ -2,7 +2,7 @@ from matplotlib import image
 
 
 def save_debug_img(arr, filename):
-    image.imsave(filename, arr, vmin=0, vmax=255, cmap='gray', origin='lower')
+    image.imsave(filename, arr, vmin=0, vmax=255, cmap='gray', origin='upper')
 
 
 def print_img(arr):

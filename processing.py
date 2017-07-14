@@ -15,7 +15,7 @@ class Process:
         max_px = np.amax(self.img)
         delta_px = max_px - min_px
         hist = [self.img[self.img == min_px + i].size for i in range(delta_px + 1)]
-        m = sum((map(lambda x, y: x * y, range(delta_px), hist)))
+        m = sum((map(lambda x, y: x * y, range(delta_px + 1), hist)))
         n = sum(hist)
         max_sigma = -1
         alpha = 0
@@ -59,19 +59,19 @@ class Process:
     def zhang_suen(self):
         def iteration(step=1):
             pixels_to_change = []
-            for i in range(1, self.w - 1):
-                for j in range(1, self.h - 1):
+            for i in range(1, self.h - 1):
+                for j in range(1, self.w - 1):
                     if self.img[i][j] == 255:
                         continue
-                    seq = str(utils.bin_px(self.img[i][j - 1])) + \
-                        str(utils.bin_px(self.img[i + 1][j - 1])) + \
-                        str(utils.bin_px(self.img[i + 1][j])) + \
-                        str(utils.bin_px(self.img[i + 1][j + 1])) + \
-                        str(utils.bin_px(self.img[i][j + 1])) + \
+                    seq = str(utils.bin_px(self.img[i - 1][j])) + \
                         str(utils.bin_px(self.img[i - 1][j + 1])) + \
-                        str(utils.bin_px(self.img[i - 1][j])) + \
+                        str(utils.bin_px(self.img[i][j + 1])) + \
+                        str(utils.bin_px(self.img[i + 1][j + 1])) + \
+                        str(utils.bin_px(self.img[i + 1][j])) + \
+                        str(utils.bin_px(self.img[i + 1][j - 1])) + \
+                        str(utils.bin_px(self.img[i][j - 1])) + \
                         str(utils.bin_px(self.img[i - 1][j - 1])) + \
-                        str(utils.bin_px(self.img[i][j - 1]))
+                        str(utils.bin_px(self.img[i - 1][j]))
                     cond = [False for _ in range(4)]
                     cond[0] = (2 <= sum(map(int, seq[:-1])) <= 6)
                     cond[1] = (seq.count('01') == 1)
@@ -98,7 +98,7 @@ class Process:
 
     def thinning(self):
         utils.save_debug_img(self.img, 'step1.png')
-        self.preprocess()
+        # self.preprocess()
         utils.save_debug_img(self.img, 'step2.png')
         self.zhang_suen()
         utils.save_debug_img(self.img, 'step3.png')
