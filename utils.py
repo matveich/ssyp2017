@@ -1,12 +1,8 @@
-from scipy import misc
-import numpy as np
+from matplotlib import image
 
 
 def save_debug_img(arr, filename):
-    arr = np.asarray(arr)
-    arr = misc.imrotate(arr, 90)
-    arr = np.flipud(arr)
-    misc.imsave(filename, arr)
+    image.imsave(filename, arr, vmin=0, vmax=255, cmap='gray', origin='lower')
 
 
 def print_img(arr):
@@ -15,3 +11,7 @@ def print_img(arr):
             print(p, end='')
         print()
     print()
+
+
+def bin_px(px):
+    return 0 if px == 255 else 1
